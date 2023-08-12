@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -12,7 +14,8 @@ import com.ataberkkilavuzcu.Driver.DriverChrome;
 
 public class BasePage {
     
-    ChromeDriver driver = DriverChrome.getDriver(); 
+    ChromeDriver driver = DriverChrome.getDriver();
+    JavascriptExecutor executor = (JavascriptExecutor) driver; 
 
     public BasePage(){
         
@@ -40,6 +43,10 @@ public class BasePage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));        
     }
 
+    public void scrollIntoView(WebElement element){
+        executor.executeScript("arguments[0].scrollIntoView();  ", element);
+    }
+    
     public void switchToTab(int tabIndex){
         ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
         driver.switchTo().window(tabs.get(tabIndex));
