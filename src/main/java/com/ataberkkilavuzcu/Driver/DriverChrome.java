@@ -1,5 +1,6 @@
 package com.ataberkkilavuzcu.Driver;
 
+import java.time.Duration;
 import java.util.Arrays;
 
 import org.openqa.selenium.chrome.ChromeDriver;

@@ -15,7 +15,8 @@ import com.ataberkkilavuzcu.Driver.DriverChrome;
 public class BasePage {
     
     ChromeDriver driver = DriverChrome.getDriver();
-    JavascriptExecutor executor = (JavascriptExecutor) driver; 
+    JavascriptExecutor executor = (JavascriptExecutor) driver;
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); 
 
     public BasePage(){
         
@@ -25,9 +26,12 @@ public class BasePage {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
         driver.get(url);
     }
-
-    public void click(By by){   
-        driver.findElement(by).click();
+    public void waitUntilClickableAndClick(By by){
+        wait.until(ExpectedConditions.elementToBeClickable(by)).click();
+    }
+    public void click(WebElement element){   
+        scrollIntoView(element);
+        element.click();
     }
     
     public void sendKeys(By by, String text){
@@ -44,7 +48,7 @@ public class BasePage {
     }
 
     public void scrollIntoView(WebElement element){
-        executor.executeScript("arguments[0].scrollIntoView();  ", element);
+        executor.executeScript("arguments[0].scrollIntoView();", element);
     }
     
     public void switchToTab(int tabIndex){
