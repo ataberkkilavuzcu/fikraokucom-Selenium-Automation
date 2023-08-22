@@ -1,13 +1,11 @@
 package Pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.devtools.idealized.Javascript;
+import org.openqa.selenium.NoSuchElementException;
 
 import DataStore.ExcelWriting;
 
-import java.time.Duration;
 import java.util.*;
 
 public class CategoryPage extends BasePage{
@@ -48,43 +46,54 @@ public class CategoryPage extends BasePage{
         return lastPageIndex;
     }
 
-    public void goToNextPage() throws InterruptedException{
-        for(int i = 0; i < 1000; i++){
-            int jokePerPage = jokeSizePerPage();
-            boolean enterCheckLoop = true;
-            if(jokePerPage < 9){
-                i = 1000;
-            List<String> storeTitles = getTitles();
-            List<String> storeText = getJokeText();
-            for(int j = 0; j < jokePerPage; j++){
-                excelWriting.writeExcel("Jokes", ExcelWriting.rowI , 0, getCategoryName());
-                excelWriting.writeExcel("Jokes", ExcelWriting.rowI , 1, storeTitles.get(j));
-                excelWriting.writeExcel("Jokes", ExcelWriting.rowI++ , 2, storeText.get(j));
-            }
-            break;
-            }
-                 
-            // if it has less than 9 jokes that means that category has only 1 page
+    public void goToNextPage() throws InterruptedException {
+        final int MAX_PAGES = 1000;
+        final int MIN_JOKES_PER_PAGE = 9;
+        
+        for (int page = 0; page < MAX_PAGES; page++) {
+            int jokesPerPage = jokeSizePerPage();
             
-            String checkLoop = driver.findElement(atLastPage).getText();
-            if(!checkLoop.contains("nceki")){
+            if (jokesPerPage < MIN_JOKES_PER_PAGE) {
                 break;
             }
-                
             
-
-            WebElement element = driver.findElement(nextButton);
             List<String> storeTitles = getTitles();
             List<String> storeText = getJokeText();
-            for(int j = 0; j < jokePerPage; j++){
-                excelWriting.writeExcel("Jokes", ExcelWriting.rowI , 0, getCategoryName());
-                excelWriting.writeExcel("Jokes", ExcelWriting.rowI , 1, storeTitles.get(j));
-                excelWriting.writeExcel("Jokes", ExcelWriting.rowI++ , 2, storeText.get(j));
+            
+            writeToExcel(storeTitles, storeText);
+            
+            if (!isNextPageAvailable()) {
+                break;
             }
-            waitForElement(nextButton, 10000);
-            click(element);
+                    
+            try {
+                WebElement nextButtonElement = driver.findElement(nextButton);
+                click(nextButtonElement);
+                Thread.sleep(5000);
+            } catch (NoSuchElementException e) {
+                break;
+            }      
+        }
+}
+
+    private void writeToExcel(List<String> titles, List<String> texts) {
+        for (int j = 0; j < titles.size(); j++) {
+            excelWriting.writeExcel("Jokes", ExcelWriting.rowI, 0, getCategoryName());
+            excelWriting.writeExcel("Jokes", ExcelWriting.rowI, 1, titles.get(j));
+            excelWriting.writeExcel("Jokes", ExcelWriting.rowI++, 2, texts.get(j));
         }
     }
+
+    private boolean isNextPageAvailable() {
+        try {
+            String nextPageText = driver.findElement(atLastPage).getText();
+            return !nextPageText.contains("Sonraki");
+        } catch (NoSuchElementException e) {
+            return true;
+        }
+    }
+
+
 
     public List<String> getTitles(){
         List<WebElement> allTitles = driver.findElements(titles);

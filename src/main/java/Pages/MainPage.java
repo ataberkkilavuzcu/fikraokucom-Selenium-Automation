@@ -1,16 +1,8 @@
 package Pages;
 
-import java.net.ConnectException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import org.apache.poi.hssf.record.chart.CategorySeriesAxisRecord;
 import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
-
-import DataStore.ExcelWriting;
+import org.openqa.selenium.TimeoutException;
 
 public class MainPage extends BasePage{
 
@@ -27,7 +19,7 @@ public class MainPage extends BasePage{
     public void clickCategory() throws InterruptedException {
         CategoryPage categoryPage = new CategoryPage();
         int size = driver.findElements(categoriesSize).size();
-        for(int i = 10 ; i < size; i++){
+        for(int i = 1 ; i < size; i++){
             By allCategories = By.xpath("//body/aside[1]/ul[1]/li["+i+"]/a");
             waitForElement(allCategories, 1000);
             WebElement elementCat = driver.findElement(allCategories);
@@ -40,25 +32,11 @@ public class MainPage extends BasePage{
         }
     }
 
-    private void initializeApp() throws InterruptedException{
+    private void initializeApp() throws InterruptedException, TimeoutException{
         launch("https://www.xn--fkraoku-rfb.com/");
-
-
-        
         while(continueApp){
              clickCategory();       
         }
     }
-    // public static void main(String[] args) throws InterruptedException {
-    //       MainPage mainPage = new MainPage();
-    //       mainPage.launch("https://www.xn--fkraoku-rfb.com/");
-    //       CategoryPage categoryPage = new CategoryPage();
-    //       mainPage.clickCategory();
-    //     // // System.out.println(categoryPage.pageSize());
-    //     // // categoryPage.getTitles();
-    //       categoryPage.goToNextPage();
 
-       
-        
-    // }
 }
