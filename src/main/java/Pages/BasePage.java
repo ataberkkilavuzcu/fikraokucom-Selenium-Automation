@@ -16,7 +16,8 @@ public class BasePage {
     
     ChromeDriver driver = DriverChrome.getDriver();
     JavascriptExecutor executor = (JavascriptExecutor) driver;
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); 
+    //waiting maximum of 105 seconds for loading page and getting elements from page.
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(105)); 
 
     public BasePage(){
         
