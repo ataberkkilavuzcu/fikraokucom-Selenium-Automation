@@ -21,7 +21,7 @@ public class MainPage extends BasePage{
         int size = driver.findElements(categoriesSize).size();
         for(int i = 1 ; i < size; i++){
             By allCategories = By.xpath("//body/aside[1]/ul[1]/li["+i+"]/a");
-            waitForElement(allCategories, 1000);
+            waitForElement(allCategories, 10000);
             WebElement elementCat = driver.findElement(allCategories);
             click(elementCat);
             Thread.sleep(5000);

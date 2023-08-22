@@ -61,6 +61,7 @@ public class CategoryPage extends BasePage{
             List<String> storeText = getJokeText();
             
             writeToExcel(storeTitles, storeText);
+            Thread.sleep(1000);
             
             if (!isNextPageAvailable()) {
                 break;
